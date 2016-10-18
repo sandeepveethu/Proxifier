@@ -13,5 +13,5 @@
 		"default_title": "Proxifier",
 		"default_popup": "popup.html"
 	},
-	"permissions": ["*://*/*","proxy"]
+	"permissions": ["*://*/*","proxy","storage"]
 }
