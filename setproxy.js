@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded',function(){
 		getColor('#4479BA');
 		setColor(this.id,this.innerText);
 		proxyChangedNotify();
-
 	});
 
 	//getting working proxies
