@@ -30,7 +30,7 @@ function setproxy() {
 	var prt = parseInt(data[1]);
 	
 	var config = {
-		mode: 'ixed_servers',
+		mode: 'fixed_servers',
 		rules: {
 			singleProxy:{
 				scheme: 'http',
