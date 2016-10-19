@@ -23,6 +23,15 @@
 		    text-decoration: none;
 		    cursor: pointer;
 		}
+		#curr-proxy {
+			/*display: none;*/
+    		padding: 10px 15px;
+    		margin: 5px;
+			background-color: green;
+			color: #FFF;
+			border-radius: 4px;
+			transition-duration: 0.2s;
+		}
 	</style>
 </head>
 <body>
@@ -30,8 +39,8 @@
 		<a class="button-link" id="proxy1">Searching for proxies...</a>
 		<a class="button-link" id="proxy2">Searching for proxies...</a>
 		<a class="button-link" id="proxy-sys">Set System Proxy</a>
-
 	</div>
+	<div id="curr-proxy"> < current proxy > </div>
 </body>
 <script type="text/javascript" src="setproxy.js"></script>
 
