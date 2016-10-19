@@ -3,28 +3,31 @@ document.addEventListener('DOMContentLoaded',function(){
 	var p2=document.getElementById('proxy2');
 	var ps=document.getElementById('proxy-sys');
 
-	getcolor('green');
+	checkActiveProxy();
 	
-	p1.addEventListener('click',setproxy);	
-	p2.addEventListener('click',setproxy);
+	p1.addEventListener('click',setProxy);	
+	p2.addEventListener('click',setProxy);
 	
 	ps.addEventListener('click',function() {
 		var config = {
 			mode: 'system'
 		}
 		chrome.proxy.settings.set({value:config,scope:'regular'});
-		getcolor('#4479BA');
-		setcolor(this.id);
+		getColor('#4479BA');
+		setColor(this.id,this.innerText);
+		proxyChangedNotify();
 
 	});
 
-	var prx_arr = getproxy();
-
+	//getting working proxies
+	var prx_arr = getProxy();
+	
 	p1.innerText = prx_arr[0];
 	p2.innerText = prx_arr[1];
+
 });
 
-function setproxy() {
+function setProxy() {
 	var data = (this.innerText).split(':');
 	var addr = data[0];
 	var prt = parseInt(data[1]);
@@ -42,18 +45,20 @@ function setproxy() {
 	};
 	
 
-	getcolor('#4479BA'); //reverting color of last set proxy
-	setcolor(this.id); //changing color of set proxy to green
+	getColor('#4479BA'); //reverting color of last set proxy
+	setColor(this.id,this.innerText); //changing color of set proxy to green
 
 	chrome.proxy.settings.set(
 		{value:config,scope:'regular'},
 		function() {
 			console.log('proxy changed');
+			proxyChangedNotify();
+			document.getElementById("curr-proxy").style.display = "none";
 	});
 }
 
 
-function getproxy() {
+function getProxy() {
 	var proxyArray = [];
 	var req = new XMLHttpRequest();
 	req.addEventListener('load',function() {
@@ -69,14 +74,42 @@ function getproxy() {
 }
 
 
-function setcolor(pid) {
-	chrome.storage.local.set({'setproxyid':pid},function(){
+function setColor(pid,proxy) {
+	chrome.storage.local.set({'setproxyid':pid,'setproxy':proxy},function(){
 		document.getElementById(pid).style.background = 'green';
 	});
 }
 
-function getcolor(clr) {
+function getColor(clr) {
 	chrome.storage.local.get(['setproxyid'],function(items){
 		document.getElementById(items['setproxyid']).style.background = clr;
+	});
+}
+
+function proxyChangedNotify() {
+	var opt = {
+		type: "basic",
+		title: "Proxifier",
+		message: "Proxy Changed!",
+		iconUrl: "icons/icon48.png"
+	}
+	chrome.notifications.create('proxychanged-msg',opt,function(msg){
+		setTimeout(function(){
+			chrome.notifications.clear(msg);
+		},1000);
+	});
+}
+
+function checkActiveProxy() {
+	chrome.storage.local.get(['setproxyid','setproxy'],function(items) {
+		var	pid = items['setproxyid'];
+		var val = items['setproxy'];
+		if(document.getElementById(pid).innerText!=val) {
+			document.getElementById("curr-proxy").style.display = "block";
+		}
+		else {
+			document.getElementById("curr-proxy").style.display = "none";
+			getColor('green');
+		}
 	});
 }
