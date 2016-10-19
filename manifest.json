@@ -13,5 +13,6 @@
 		"default_title": "Proxifier",
 		"default_popup": "popup.html"
 	},
-	"permissions": ["*://*/*","proxy","storage"]
+	"permissions": ["*://*/*","proxy","storage","notifications"],
+  	"web_accessible_resources": ["icons/icon48.png"]
 }
