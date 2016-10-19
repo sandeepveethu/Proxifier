@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded',function(){
 		chrome.proxy.settings.set({value:config,scope:'regular'});
 		getColor('#4479BA');
 		setColor(this.id,this.innerText);
+		checkActiveProxy();
 		proxyChangedNotify();
 	});
 
