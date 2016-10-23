@@ -6,9 +6,11 @@
 		body {
 			min-width: 250px;
 		}
+
 		div {
 			text-align: center;
 		}
+		
 		.button-link {
 			display: block;
     		padding: 10px 15px;
@@ -18,13 +20,21 @@
     		border-radius: 4px;
     		transition-duration: 0.2s;
 		}
+		
 		.button-link:hover, .button-link:focus {
 		    background: #356094;
 		    text-decoration: none;
 		    cursor: pointer;
 		}
+		
+		#error {
+			display: none;
+			color: red;
+			transition-duration: 0.2s;
+		}
+		
 		#curr-proxy {
-			/*display: none;*/
+			display: none;
     		padding: 10px 15px;
     		margin: 5px;
 			background-color: green;
@@ -35,6 +45,7 @@
 	</style>
 </head>
 <body>
+	<div id="error">Check your Internet Connection.</div>
 	<div>
 		<a class="button-link" id="proxy1">Searching for proxies...</a>
 		<a class="button-link" id="proxy2">Searching for proxies...</a>

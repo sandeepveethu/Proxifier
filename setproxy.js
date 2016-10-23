@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded',function(){
 	var p1=document.getElementById('proxy1');
 	var p2=document.getElementById('proxy2');
 	var ps=document.getElementById('proxy-sys');
-
-	checkActiveProxy();
 	
 	p1.addEventListener('click',setProxy);	
 	p2.addEventListener('click',setProxy);
@@ -19,12 +17,8 @@ document.addEventListener('DOMContentLoaded',function(){
 		proxyChangedNotify();
 	});
 
-	//getting working proxies
-	var prx_arr = getProxy();
-	
-	p1.innerText = prx_arr[0];
-	p2.innerText = prx_arr[1];
-
+	getProxy();
+	//setInterval(getProxy,5000);
 });
 
 function setProxy() {
@@ -57,22 +51,30 @@ function setProxy() {
 	});
 }
 
-
 function getProxy() {
-	var proxyArray = [];
+	checkActiveProxy();
+
 	var req = new XMLHttpRequest();
+	
+	req.timeout = 2000;
+	
 	req.addEventListener('load',function() {
+		document.getElementById("error").style.display = 'none';		
 		var doc = document.implementation.createHTMLDocument('');
 		doc.documentElement.innerHTML = req.responseText;
 		var data = ((doc.getElementsByTagName('body'))[0].innerText).split('\n');
-		proxyArray.push((data[36].split(' '))[1]);
-		proxyArray.push((data[39].split(' '))[1]);
+		document.getElementById("proxy1").innerText = (data[36].split(' '))[1]; 
+		document.getElementById("proxy2").innerText = (data[39].split(' '))[1];
+		checkActiveProxy();
 	});
-	req.open('GET','http://172.16.114.121/PROXY_CHECKER/',false); //synchronous request
+	
+	req.addEventListener('error',function() {
+		document.getElementById("error").style.display = 'block';
+	})
+	
+	req.open('GET','http://172.16.114.121/PROXY_CHECKER/');
 	req.send(null);
-	return proxyArray;
 }
-
 
 function setColor(pid,proxy) {
 	chrome.storage.local.set({'setproxyid':pid,'setproxy':proxy},function(){
@@ -101,10 +103,13 @@ function proxyChangedNotify() {
 }
 
 function checkActiveProxy() {
-	chrome.storage.local.get(['setproxyid','setproxy'],function(items) {
-		var	pid = items['setproxyid'];
+	chrome.storage.local.get(['setproxy'],function(items) {
 		var val = items['setproxy'];
-		if(document.getElementById(pid).innerText!=val) {
+		var p1txt = document.getElementById('proxy1').innerText;
+		var p2txt = document.getElementById('proxy2').innerText;
+		var pstxt = document.getElementById('proxy-sys').innerText;
+
+		if(p1txt!=val && p2txt!=val && pstxt!=val) {
 			document.getElementById("curr-proxy").style.display = "block";
 		}
 		else {
